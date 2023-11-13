@@ -4,6 +4,7 @@ import { MongoClient } from 'mongodb';
 const app = express();
 app.use(express.json());
 
+// Get article using name endpoint
 app.get('/api/articles/:name', async (req, res) => {
   const { name } = req.params;
 
@@ -26,13 +27,24 @@ app.post('/hello', (req, res) => {
 });
 
 // Upvote the article
-
-app.put('/api/articles/:name/upvote', (req, res) => {
+app.put('/api/articles/:name/upvote', async (req, res) => {
   // upvote logic
   const { name } = req.params;
-  const article = articleInfo.find((a) => a.name === name);
+
+  const client = new MongoClient('mongodb://127.0.0.1:27017');
+  await client.connect();
+
+  const db = client.db('react-blog-db');
+  await db.collection('articles').updateOne(
+    { name },
+    {
+      $inc: { upvotes: 1 },
+    }
+  );
+
+  const article = await db.collection('articles').findOne({ name });
+
   if (article) {
-    article.upvotes++;
     res.send(`The ${name} article has ${article.upvotes} upvotes`);
   } else {
     res.send("That article doesn't exist");
