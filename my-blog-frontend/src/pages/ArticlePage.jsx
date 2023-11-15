@@ -4,6 +4,7 @@ import axios from 'axios';
 import articles from './article-content';
 import NotFoundPage from './NotFounPage';
 import CommentsList from '../components/commentsList';
+import AddCommentForm from '../components/AddCommentForm';
 
 const ArticlePage = () => {
   const { articleId } = useParams();
@@ -39,6 +40,10 @@ const ArticlePage = () => {
       {article.content.map((paragraph, i) => (
         <p key={i}>{paragraph}</p>
       ))}
+      <AddCommentForm
+        articleName={articleId}
+        onArticleUpdate={(updatedArticle) => setArticleInfo(updatedArticle)}
+      />
       <CommentsList comments={articleInfo.comments} />
     </>
   );
