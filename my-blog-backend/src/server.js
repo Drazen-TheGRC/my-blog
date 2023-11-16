@@ -1,7 +1,7 @@
-import express from 'express';
-import { db, connectToDB } from './db.js';
 import fs from 'fs';
 import admin from 'firebase-admin';
+import express from 'express';
+import { db, connectToDB } from './db.js';
 
 const credentials = JSON.parse(fs.readFileSync('./credentials.json'));
 admin.initializeApp({
@@ -13,6 +13,7 @@ app.use(express.json());
 
 app.use(async (req, res, next) => {
   const { authtoken } = req.headers;
+
   if (authtoken) {
     try {
       req.user = await admin.auth().verifyIdToken(authtoken);
@@ -26,7 +27,6 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Get article using name endpoint
 app.get('/api/articles/:name', async (req, res) => {
   const { name } = req.params;
   const { uid } = req.user;
@@ -35,7 +35,6 @@ app.get('/api/articles/:name', async (req, res) => {
 
   if (article) {
     const upvoteIds = article.upvoteIds || [];
-
     article.canUpvote = uid && !upvoteIds.includes(uid);
     res.json(article);
   } else {
@@ -51,9 +50,7 @@ app.use((req, res, next) => {
   }
 });
 
-// upvote endpoint
 app.put('/api/articles/:name/upvote', async (req, res) => {
-  // upvote logic
   const { name } = req.params;
   const { uid } = req.user;
 
@@ -72,13 +69,14 @@ app.put('/api/articles/:name/upvote', async (req, res) => {
         }
       );
     }
+
     const updatedArticle = await db.collection('articles').findOne({ name });
     res.json(updatedArticle);
   } else {
     res.send("That article doesn't exist");
   }
 });
-// Comments endpoint
+
 app.post('/api/articles/:name/comments', async (req, res) => {
   const { name } = req.params;
   const { text } = req.body;
@@ -90,13 +88,12 @@ app.post('/api/articles/:name/comments', async (req, res) => {
       $push: { comments: { postedBy: email, text } },
     }
   );
-
   const article = await db.collection('articles').findOne({ name });
 
   if (article) {
     res.json(article);
   } else {
-    res.send("That article doesn't exist");
+    res.send("That article doesn't exist!");
   }
 });
 

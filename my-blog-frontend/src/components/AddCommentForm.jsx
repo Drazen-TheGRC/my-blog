@@ -1,8 +1,8 @@
-import axios from 'axios';
 import { useState } from 'react';
+import axios from 'axios';
 import useUser from '../hooks/useUser';
 
-const AddCommentForm = ({ articleName, onArticleUpdate }) => {
+const AddCommentForm = ({ articleName, onArticleUpdated }) => {
   const [name, setName] = useState('');
   const [commentText, setCommentText] = useState('');
   const { user } = useUser();
@@ -16,36 +16,26 @@ const AddCommentForm = ({ articleName, onArticleUpdate }) => {
         postedBy: name,
         text: commentText,
       },
-      { headers }
+      {
+        headers,
+      }
     );
     const updatedArticle = response.data;
-    onArticleUpdate(updatedArticle);
+    onArticleUpdated(updatedArticle);
     setName('');
     setCommentText('');
   };
 
   return (
-    <div className='add-comment-form'>
+    <div id='add-comment-form'>
       <h3>Add a Comment</h3>
-      <label htmlFor=''>
-        Name:{' '}
-        <input
-          type='text'
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </label>
-      <label htmlFor=''>
-        Comment:
-        <textarea
-          name=''
-          id=''
-          cols='50'
-          rows='4'
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-        ></textarea>
-      </label>
+      {user && <p>You are posting as {user.email}</p>}
+      <textarea
+        value={commentText}
+        onChange={(e) => setCommentText(e.target.value)}
+        rows='4'
+        cols='50'
+      />
       <button onClick={addComment}>Add Comment</button>
     </div>
   );

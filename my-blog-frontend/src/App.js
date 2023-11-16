@@ -5,7 +5,7 @@ import AboutPage from './pages/AboutPage';
 import ArticlePage from './pages/ArticlePage';
 import ArticlesPage from './pages/ArticlesPage';
 import NavBar from './NavBar';
-import NotFoundPage from './pages/NotFounPage';
+import NotFoundPage from './pages/NotFoundPage';
 import LogInPage from './pages/LogInPage';
 import CreateAccountPage from './pages/CreateAccountPage';
 
