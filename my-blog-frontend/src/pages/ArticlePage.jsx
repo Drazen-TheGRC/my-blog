@@ -6,8 +6,10 @@ import CommentsList from '../components/CommentsList';
 import AddCommentForm from '../components/AddCommentForm';
 import useUser from '../hooks/useUser';
 import articles from './article-content.js';
+import { useNavigate } from 'react-router-dom';
 
 const ArticlePage = () => {
+  const navigate = useNavigate();
   const [articleInfo, setArticleInfo] = useState({
     upvotes: 0,
     comments: [],
@@ -29,7 +31,7 @@ const ArticlePage = () => {
       setArticleInfo(newArticleInfo);
     };
 
-    if (isLoading) {
+    if (!isLoading) {
       loadArticleInfo();
     }
   }, [isLoading, user, articleId]);
@@ -61,7 +63,13 @@ const ArticlePage = () => {
             {canUpvote ? 'Upvote' : 'Already Upvoted'}
           </button>
         ) : (
-          <button>Log in to upvote</button>
+          <button
+            onClick={() => {
+              navigate('/login');
+            }}
+          >
+            Log in to upvote
+          </button>
         )}
         <p>This article has {articleInfo.upvotes} upvote(s)</p>
       </div>
@@ -74,7 +82,13 @@ const ArticlePage = () => {
           onArticleUpdated={(updatedArticle) => setArticleInfo(updatedArticle)}
         />
       ) : (
-        <button>Log in to add a comment</button>
+        <button
+          onClick={() => {
+            navigate('/login');
+          }}
+        >
+          Log in to add a comment
+        </button>
       )}
       <CommentsList comments={articleInfo.comments} />
     </>

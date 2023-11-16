@@ -5,3 +5,4 @@ my-blog-frontend/node_modules
 my-blog-frontend/build
 my-blog-backend/src/credentials.json
 my-blog-backend/build
+my-blog-backend/.env
